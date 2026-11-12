@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Misión Marca Digital · Agente 360</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CONFIGURACIÓN DOCENTE  → cambia estos valores en el <script>
+   (busca "CONFIG" más abajo)
+   ============================================================ */
+:root{
+  --bg:#0b1324; --bg2:#111c33; --card:#16223d; --line:#263556;
+  --ink:#e8eefc; --muted:#9fb0d3; --accent:#2dd4bf; --accent2:#818cf8;
+  --ok:#34d399; --bad:#f87171; --warn:#fbbf24; --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 Inter,system-ui,sans-serif;min-height:100vh}
+h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;line-height:1.2;margin:0 0 .5em}
+h1{font-size:1.6rem} h2{font-size:1.35rem} h3{font-size:1.05rem}
+a{color:var(--accent)}
+button,input,textarea,select{font:inherit;color:inherit}
+.wrap{max-width:960px;margin:0 auto;padding:16px}
+/* top bar */
+.top{position:sticky;top:0;z-index:10;background:rgba(11,19,36,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+@media(max-width:680px){.top{position:static}}
+.top .wrap{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding-top:10px;padding-bottom:10px}
+.brand{font-family:"Space Grotesk";font-weight:700;letter-spacing:.3px;display:flex;align-items:center;gap:8px}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+.grow{flex:1}
+.pts{font-weight:600;font-variant-numeric:tabular-nums}
+.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.lang button{background:none;border:0;padding:4px 10px;cursor:pointer;color:var(--muted)}
+.lang button.on{background:var(--accent);color:#04201c;font-weight:600}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;width:100%}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .4s}
+.medals{display:flex;gap:6px;flex-wrap:wrap}
+.medal{font-size:.75rem;padding:3px 8px;border-radius:99px;border:1px dashed var(--line);color:var(--muted)}
+.medal.on{border:1px solid var(--warn);color:var(--warn);background:rgba(251,191,36,.08)}
+/* steps nav */
+.steps{display:flex;gap:6px;overflow-x:auto;padding:12px 0 4px}
+.steps button{flex:0 0 auto;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer;color:var(--muted);font-size:.85rem}
+.steps button.on{border-color:var(--accent);color:var(--ink)}
+.steps button .s{display:block;font-size:.72rem;color:var(--accent)}
+.steps button:disabled{opacity:.45;cursor:not-allowed}
+/* cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin:14px 0}
+.hero{background:radial-gradient(circle at 85% 0%,rgba(45,212,191,.18),transparent 55%),var(--card)}
+.tag{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:99px;background:rgba(129,140,248,.15);color:var(--accent2);margin:0 4px 4px 0}
+.muted{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:680px){.grid2{grid-template-columns:1fr}}
+label.f{display:block;font-weight:600;margin:12px 0 4px}
+input[type=text],input[type=url],textarea,select{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{min-height:90px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:.8rem;color:var(--muted);margin-top:3px}
+.hint.ok{color:var(--ok)}
+.btn{background:var(--accent);color:#04201c;border:0;border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer}
+.btn.sec{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.small{padding:6px 10px;font-size:.85rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:10px;cursor:pointer}
+.chk:hover{background:var(--bg2)}
+.chk input{margin-top:4px;accent-color:var(--accent);width:18px;height:18px;flex:0 0 auto}
+ol.steps-list{padding-left:20px} ol.steps-list li{margin:4px 0}
+/* sorting */
+.sort-item{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin:8px 0;background:var(--bg2)}
+.sort-item .opts{display:flex;gap:6px;flex:0 0 auto}
+.sort-item.ok{border-color:var(--ok)} .sort-item.bad{border-color:var(--bad)}
+.pill{border:1px solid var(--line);background:transparent;border-radius:99px;padding:5px 10px;cursor:pointer;font-size:.82rem}
+.pill.r{border-color:rgba(248,113,113,.6)} .pill.o{border-color:rgba(52,211,153,.6)}
+.pill.sel.r{background:var(--bad);color:#2a0606} .pill.sel.o{background:var(--ok);color:#04261a}
+@media(max-width:560px){.sort-item{flex-direction:column;align-items:flex-start}}
+/* quiz / dilemmas */
+.q{margin:14px 0;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--bg2)}
+.q .opt{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:6px 0;cursor:pointer}
+.q .opt:hover:not(:disabled){border-color:var(--accent)}
+.q .opt.ok{border-color:var(--ok);background:rgba(52,211,153,.12)}
+.q .opt.bad{border-color:var(--bad);background:rgba(248,113,113,.12)}
+.q .opt:disabled{cursor:default}
+.fb{margin-top:8px;padding:10px 12px;border-radius:10px;font-size:.9rem;background:rgba(45,212,191,.08);border-left:3px solid var(--accent)}
+.fb.bad{background:rgba(248,113,113,.08);border-left-color:var(--bad)}
+/* offers */
+.offers{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.offer{text-align:left;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;cursor:pointer}
+.offer.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.offer b{display:block;margin-bottom:4px}
+.kw{display:inline-block;font-size:.75rem;padding:2px 8px;border-radius:99px;border:1px solid var(--line);margin:3px 4px 0 0;color:var(--muted)}
+.kw.on{border-color:var(--ok);color:var(--ok)}
+.checks li{list-style:none;margin:4px 0}
+.checks{padding:0}
+/* digcomp */
+.dig{display:grid;grid-template-columns:1fr 280px;gap:16px;align-items:center}
+@media(max-width:680px){.dig{grid-template-columns:1fr}}
+.dig-row{margin:10px 0}
+.dig-row input[type=range]{width:100%;accent-color:var(--accent)}
+.lvl{font-size:.8rem;color:var(--accent)}
+svg text{fill:var(--muted);font-size:10px;font-family:Inter}
+/* phase score */
+.pscore{display:flex;align-items:center;gap:10px;font-weight:600}
+.pscore .bar{flex:1}
+.nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0 30px}
+/* dossier */
+.dossier h3{margin-top:18px;border-bottom:1px solid var(--line);padding-bottom:4px}
+.dossier pre{white-space:pre-wrap;font:inherit;background:var(--bg2);padding:10px;border-radius:10px;margin:6px 0}
+.big{font-size:2.4rem;font-family:"Space Grotesk";font-weight:700;color:var(--accent)}
+.medal-big{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:12px;border:1px dashed var(--line);margin:4px;color:var(--muted)}
+.medal-big.on{border:1px solid var(--warn);color:var(--warn)}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--warn);color:#2b1d00;padding:10px 16px;border-radius:12px;font-weight:600;box-shadow:0 8px 30px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .3s;z-index:50}
+.toast.show{opacity:1}
+@media print{
+  body{background:#fff;color:#000}
+  .top,.steps,.nav,.noprint{display:none!important}
+  .card{border:1px solid #bbb;background:#fff;break-inside:avoid}
+  .dossier pre{background:#f3f3f3}
+  .big{color:#000} .muted{color:#444}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span><span id="brandTxt">Agente 360</span></div>
+    <div class="grow" style="min-width:140px"><div class="bar"><i id="gbar" style="width:0"></i></div></div>
+    <div class="pts" id="gpts">0 / 400</div>
+    <div class="lang" role="group" aria-label="Idioma">
+      <button data-lang="es">ES</button><button data-lang="ca">CA</button>
+    </div>
+    <div class="medals" id="gmedals" style="width:100%"></div>
+  </div>
+</header>
+<main class="wrap">
+  <nav class="steps" id="steps"></nav>
+  <div id="view"></div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   CONFIG — edita aquí
+   ============================================================ */
+const CONFIG = {
+  EMAIL_DOCENTE: "",          // p. ej. "tucorreo@centre.cat" (si queda vacío, el alumno escribe el destinatario)
+  CODIGO: "A3UD2",
+  MODULO: "1707 Orientación profesional / Orientació professional",
+  GRUPO_DEFECTO: "SSC017",
+  STORAGE_KEY: "a3ud2_marca_digital_v1"
+};
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const words = s => (String(s||"").trim().match(/\S+/g)||[]).length;
+const norm = s => String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+let S = load();
+const L = o => (o && typeof o === "object" && "es" in o) ? (o[S.lang] || o.es) : o;
+
+function fresh(){
+  return {lang:"es",phase:0,name:"",group:CONFIG.GRUPO_DEFECTO,partner:"",
+    f1:{sort:{},engines:[],results:"",found:"",risks:"",actions:""},
+    f2:{check:[],cvlink:"",dig:{a1:0,a2:0,a3:0,a4:0,a5:0},improve:"",quiz:{}},
+    f3:{offer:"",customTitle:"",customKw:"",company:"",p0:"",p1:"",p2:"",p3:"",p4:"",link:"",peerName:"",peer:[]},
+    f4:{ans:{},just:{}}, medalsSeen:[]};
+}
+function load(){
+  try{ const r = localStorage.getItem(CONFIG.STORAGE_KEY); if(r){ const o = JSON.parse(r); const f = fresh();
+    return Object.assign(f,o,{f1:Object.assign(f.f1,o.f1),f2:Object.assign(f.f2,o.f2),f3:Object.assign(f.f3,o.f3),f4:Object.assign(f.f4,o.f4)}); } }catch(e){}
+  return fresh();
+}
+function save(){ try{ localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(S)); }catch(e){} }
+
+/* ============================================================
+   TEXTOS
+   ============================================================ */
+const T = {
+  brand:{es:"Misión Marca Digital · Agente 360",ca:"Missió Marca Digital · Agent 360"},
+  tabs:[{es:"Briefing",ca:"Briefing"},{es:"Auditoría",ca:"Auditoria"},{es:"Perfil",ca:"Perfil"},{es:"Candidatura",ca:"Candidatura"},{es:"Dilemas",ca:"Dilemes"},{es:"Dossier",ca:"Dossier"}],
+  phase:{es:"Fase",ca:"Fase"},
+  next:{es:"Siguiente fase →",ca:"Següent fase →"}, prev:{es:"← Anterior",ca:"← Anterior"},
+  phaseScore:{es:"Puntos de la fase",ca:"Punts de la fase"},
+  needName:{es:"Escribe tu nombre y grupo para empezar.",ca:"Escriu el teu nom i grup per començar."},
+  medalWon:{es:"🏅 Medalla conseguida: ",ca:"🏅 Medalla aconseguida: "},
+  words:{es:"palabras",ca:"paraules"},
+  ce:{es:"Criterios",ca:"Criteris"},
+};
+
+const MEDALS = [
+  {id:"det",ico:"🔍",n:{es:"Detective de huella",ca:"Detectiu d'empremta"},d:{es:"Fase 1 ≥ 80 puntos",ca:"Fase 1 ≥ 80 punts"}},
+  {id:"vis",ico:"💼",n:{es:"Perfil profesional visible",ca:"Perfil professional visible"},d:{es:"Fase 2 ≥ 80 y Fase 3 ≥ 70",ca:"Fase 2 ≥ 80 i Fase 3 ≥ 70"}},
+  {id:"pri",ico:"🛡️",n:{es:"Experto en privacidad",ca:"Expert en privadesa"},d:{es:"Todos los dilemas de privacidad correctos y clasificación ≥ 40",ca:"Tots els dilemes de privadesa correctes i classificació ≥ 40"}},
+  {id:"ciu",ico:"🌐",n:{es:"Ciudadano digital responsable",ca:"Ciutadà digital responsable"},d:{es:"Fase 4 ≥ 80 puntos",ca:"Fase 4 ≥ 80 punts"}},
+  {id:"a360",ico:"⭐",n:{es:"Agente 360",ca:"Agent 360"},d:{es:"Las 4 fases ≥ 70 puntos",ca:"Les 4 fases ≥ 70 punts"}},
+];
+
+/* ---------- Fase 1 ---------- */
+const SORT = [
+  {id:1,a:"r",t:{es:"Fotos de una fiesta, públicas en Instagram y etiquetadas con tu nombre",ca:"Fotos d'una festa, públiques a Instagram i etiquetades amb el teu nom"},f:{es:"Contenido personal público que un reclutador puede asociar a tu candidatura.",ca:"Contingut personal públic que un reclutador pot associar a la teva candidatura."}},
+  {id:2,a:"o",t:{es:"Perfil de LinkedIn actualizado con tu formación y prácticas",ca:"Perfil de LinkedIn actualitzat amb la teva formació i pràctiques"},f:{es:"Refuerza tu marca profesional y te hace localizable.",ca:"Reforça la teva marca professional i et fa localitzable."}},
+  {id:3,a:"r",t:{es:"Comentarios ofensivos antiguos en X/Twitter",ca:"Comentaris ofensius antics a X/Twitter"},f:{es:"Riesgo reputacional: conviene borrarlos o restringirlos.",ca:"Risc reputacional: convé esborrar-los o restringir-los."}},
+  {id:4,a:"o",t:{es:"Portfolio o blog con proyectos y materiales propios",ca:"Portfolio o blog amb projectes i materials propis"},f:{es:"Evidencia real de tus competencias.",ca:"Evidència real de les teves competències."}},
+  {id:5,a:"r",t:{es:"Tu teléfono y dirección visibles en una web pública",ca:"El teu telèfon i adreça visibles en una web pública"},f:{es:"Datos personales expuestos: solicita su supresión.",ca:"Dades personals exposades: sol·licita'n la supressió."}},
+  {id:6,a:"o",t:{es:"Noticia de tu centro sobre un premio o proyecto en el que participaste",ca:"Notícia del teu centre sobre un premi o projecte en què vas participar"},f:{es:"Visibilidad positiva verificable por terceros.",ca:"Visibilitat positiva verificable per tercers."}},
+  {id:7,a:"r",t:{es:"Correo electrónico poco profesional (p. ej. «guapito99@…»)",ca:"Correu electrònic poc professional (p. ex. «guapet99@…»)"},f:{es:"Usa una dirección con nombre y apellido.",ca:"Fes servir una adreça amb nom i cognom."}},
+  {id:8,a:"o",t:{es:"Voluntariado reseñado en la prensa local",ca:"Voluntariat ressenyat a la premsa local"},f:{es:"Muestra compromiso y competencias transversales.",ca:"Mostra compromís i competències transversals."}},
+  {id:9,a:"r",t:{es:"Tu correo aparece en una filtración de datos (haveibeenpwned)",ca:"El teu correu apareix en una filtració de dades (haveibeenpwned)"},f:{es:"Cambia contraseñas y activa la verificación en dos pasos.",ca:"Canvia contrasenyes i activa la verificació en dos passos."}},
+  {id:10,a:"o",t:{es:"Recomendaciones de antiguos compañeros o tutores",ca:"Recomanacions d'antics companys o tutors"},f:{es:"Prueba social que valida tu perfil.",ca:"Prova social que valida el teu perfil."}},
+];
+const ENGINES = ["Google","Bing","DuckDuckGo",{es:"Búsqueda de imágenes",ca:"Cerca d'imatges"},{es:"Redes sociales",ca:"Xarxes socials"},"haveibeenpwned.com"];
+
+/* ---------- Fase 2 ---------- */
+const EUROPASS = [
+  {es:"He creado mi cuenta en el perfil Europass",ca:"He creat el meu compte al perfil Europass"},
+  {es:"Datos personales mínimos (sin DNI, ni estado civil, ni fecha de nacimiento obligatoria)",ca:"Dades personals mínimes (sense DNI, ni estat civil, ni data de naixement obligatòria)"},
+  {es:"Experiencia laboral y prácticas con logros concretos",ca:"Experiència laboral i pràctiques amb assoliments concrets"},
+  {es:"Formación académica y complementaria",ca:"Formació acadèmica i complementària"},
+  {es:"Idiomas autoevaluados con el MCER (A1–C2)",ca:"Idiomes autoavaluats amb el MECR (A1–C2)"},
+  {es:"He exportado el CV en PDF con un nombre profesional (Apellido_Nombre_CV.pdf)",ca:"He exportat el CV en PDF amb un nom professional (Cognom_Nom_CV.pdf)"},
+];
+const DIG = [
+  {k:"a1",n:{es:"Información y alfabetización de datos",ca:"Informació i alfabetització de dades"}},
+  {k:"a2",n:{es:"Comunicación y colaboración",ca:"Comunicació i col·laboració"}},
+  {k:"a3",n:{es:"Creación de contenidos digitales",ca:"Creació de continguts digitals"}},
+  {k:"a4",n:{es:"Seguridad",ca:"Seguretat"}},
+  {k:"a5",n:{es:"Resolución de problemas",ca:"Resolució de problemes"}},
+];
+const lvlName = v => v===0?{es:"sin valorar",ca:"sense valorar"}:v<=2?{es:"Básico",ca:"Bàsic"}:v<=4?{es:"Intermedio",ca:"Intermedi"}:v<=6?{es:"Avanzado",ca:"Avançat"}:{es:"Altamente especializado",ca:"Altament especialitzat"};
+const QUIZ2 = [
+  {q:{es:"¿Qué escala usa Europass para autoevaluar idiomas?",ca:"Quina escala fa servir Europass per autoavaluar idiomes?"},o:[{es:"Marco Común Europeo de Referencia (A1–C2)",ca:"Marc Comú Europeu de Referència (A1–C2)"},{es:"Puntuación TOEFL",ca:"Puntuació TOEFL"},{es:"Niveles del 1 al 10",ca:"Nivells de l'1 al 10"}],a:0,f:{es:"Europass utiliza el MCER: A1–A2 usuario básico, B1–B2 independiente, C1–C2 competente.",ca:"Europass utilitza el MECR: A1–A2 usuari bàsic, B1–B2 independent, C1–C2 competent."}},
+  {q:{es:"¿Cuántas áreas de competencia tiene el marco DigComp?",ca:"Quantes àrees de competència té el marc DigComp?"},o:["3","5","8"],a:1,f:{es:"5 áreas (y 21 competencias). Los 8 son los niveles de dominio.",ca:"5 àrees (i 21 competències). Els 8 són els nivells de domini."}},
+  {q:{es:"En España, ¿es obligatorio incluir foto y DNI en el CV?",ca:"A Espanya, és obligatori incloure foto i DNI al CV?"},o:[{es:"Sí, siempre",ca:"Sí, sempre"},{es:"No; aporta solo los datos necesarios para contactar contigo",ca:"No; aporta només les dades necessàries per contactar-te"},{es:"Solo el DNI",ca:"Només el DNI"}],a:1,f:{es:"Principio de minimización: comparte solo los datos pertinentes. La foto es opcional.",ca:"Principi de minimització: comparteix només les dades pertinents. La foto és opcional."}},
+  {q:{es:"¿En qué área DigComp se incluyen la protección de datos personales y el bienestar digital?",ca:"En quina àrea DigComp s'inclouen la protecció de dades personals i el benestar digital?"},o:[{es:"Comunicación y colaboración",ca:"Comunicació i col·laboració"},{es:"Seguridad",ca:"Seguretat"},{es:"Creación de contenidos",ca:"Creació de continguts"}],a:1,f:{es:"El área 4 (Seguridad) incluye proteger dispositivos, datos, salud y bienestar, y el medio ambiente.",ca:"L'àrea 4 (Seguretat) inclou protegir dispositius, dades, salut i benestar, i el medi ambient."}},
+];
+
+/* ---------- Fase 3 (ofertas ficticias) ---------- */
+const OFFERS = [
+  {id:"A",co:"Fundació Illa Ocupa",t:{es:"Técnico/a de orientación laboral (Maó)",ca:"Tècnic/a d'orientació laboral (Maó)"},
+   d:{es:"Atención a personas demandantes de empleo, entrevistas de orientación, apoyo en CV Europass y LinkedIn, trabajo en equipo y tratamiento confidencial de datos.",ca:"Atenció a persones demandants d'ocupació, entrevistes d'orientació, suport en CV Europass i LinkedIn, treball en equip i tractament confidencial de dades."},
+   kw:["orientaci","entrevista","europass","linkedin","equip","datos|dades","digital"]},
+  {id:"B",co:"Acadèmia Nàutica Llevant",t:{es:"Formador/a de FP para el empleo (Ciutadella)",ca:"Formador/a d'FP per a l'ocupació (Ciutadella)"},
+   d:{es:"Programar y evaluar acciones formativas, usar plataformas como Moodle, competencia digital docente, comunicación con el alumnado y coordinación con empresas.",ca:"Programar i avaluar accions formatives, fer servir plataformes com Moodle, competència digital docent, comunicació amb l'alumnat i coordinació amb empreses."},
+   kw:["program","evalua|avalua","moodle","digital","comunicaci","alumn","empresa"]},
+  {id:"C",co:"Gestoria Port de Maó",t:{es:"Auxiliar administrativo/a (Maó)",ca:"Auxiliar administratiu/iva (Maó)"},
+   d:{es:"Atención al cliente, ofimática (hojas de cálculo y procesador de textos), archivo digital, cumplimiento del RGPD y organización del trabajo.",ca:"Atenció al client, ofimàtica (fulls de càlcul i processador de textos), arxiu digital, compliment del RGPD i organització de la feina."},
+   kw:["client","ofimatic","hoja|full","archiv|arxiu","rgpd","organiza|organitza","digital"]},
+  {id:"X",co:"",t:{es:"Oferta real que he encontrado",ca:"Oferta real que he trobat"},d:{es:"Pega el título, la empresa y 5 palabras clave de una oferta real (InfoJobs, SOIB, LinkedIn…).",ca:"Enganxa el títol, l'empresa i 5 paraules clau d'una oferta real (InfoJobs, SOIB, LinkedIn…)."},kw:[]},
+];
+const PEER = [
+  {es:"Va dirigida a una persona o departamento concreto",ca:"Va adreçada a una persona o departament concret"},
+  {es:"Explica por qué esta empresa y este puesto (no es genérica)",ca:"Explica per què aquesta empresa i aquest lloc (no és genèrica)"},
+  {es:"Conecta competencias con requisitos de la oferta, con ejemplos",ca:"Connecta competències amb requisits de l'oferta, amb exemples"},
+  {es:"Sin faltas de ortografía y con tono profesional",ca:"Sense faltes d'ortografia i amb to professional"},
+  {es:"Cierra con una propuesta de entrevista y datos de contacto",ca:"Tanca amb una proposta d'entrevista i dades de contacte"},
+];
+
+/* ---------- Fase 4 ---------- */
+const DIL = [
+  {id:1,priv:false,tag:"IA",q:{es:"Usas una IA generativa para redactar tu carta de presentación. ¿Qué haces con el resultado?",ca:"Fas servir una IA generativa per redactar la carta de presentació. Què fas amb el resultat?"},
+   o:[{es:"La envío tal cual: está bien escrita",ca:"L'envio tal qual: està ben escrita"},{es:"La uso como borrador: compruebo datos, la personalizo con mis experiencias reales y no invento méritos",ca:"La faig servir d'esborrany: comprovo dades, la personalitzo amb les meves experiències reals i no invento mèrits"},{es:"Nunca uso IA: está prohibido en procesos de selección",ca:"Mai faig servir IA: està prohibit en processos de selecció"}],a:1,
+   f:{es:"La IA es una herramienta útil, pero tú eres responsable del contenido: veracidad, personalización y revisión crítica.",ca:"La IA és una eina útil, però tu ets responsable del contingut: veracitat, personalització i revisió crítica."}},
+  {id:2,priv:true,tag:"RGPD",q:{es:"Un formulario de candidatura te pide religión, estado civil y si piensas tener hijos.",ca:"Un formulari de candidatura et demana religió, estat civil i si penses tenir fills."},
+   o:[{es:"Respondo todo para no quedar mal",ca:"Ho responc tot per no quedar malament"},{es:"No respondo esos campos: son datos no pertinentes y pueden ser discriminatorios",ca:"No responc aquests camps: són dades no pertinents i poden ser discriminatòries"},{es:"Me invento las respuestas",ca:"M'invento les respostes"}],a:1,
+   f:{es:"El RGPD exige minimización de datos (art. 5) y la religión es categoría especial (art. 9). Preguntar por planes familiares puede ser discriminatorio.",ca:"El RGPD exigeix minimització de dades (art. 5) i la religió és categoria especial (art. 9). Preguntar per plans familiars pot ser discriminatori."}},
+  {id:3,priv:true,tag:"IA + datos",q:{es:"Quieres que un chatbot gratuito mejore tu CV. ¿Cómo lo subes?",ca:"Vols que un xatbot gratuït millori el teu CV. Com el puges?"},
+   o:[{es:"Con todos mis datos: así lo hace mejor",ca:"Amb totes les meves dades: així ho fa millor"},{es:"Anonimizado (sin teléfono, dirección ni DNI) y tras revisar la política de privacidad",ca:"Anonimitzat (sense telèfon, adreça ni DNI) i després de revisar la política de privadesa"},{es:"Le paso también la contraseña de LinkedIn para que lo actualice",ca:"Li passo també la contrasenya de LinkedIn perquè l'actualitzi"}],a:1,
+   f:{es:"Lo que escribes en una IA puede usarse para entrenar modelos. Anonimiza y nunca compartas credenciales.",ca:"El que escrius en una IA pot servir per entrenar models. Anonimitza i no comparteixis mai credencials."}},
+  {id:4,priv:true,tag:"LOPDGDD",q:{es:"Un conocido publica una foto tuya comprometida sin tu permiso y aparece al buscar tu nombre.",ca:"Un conegut publica una foto teva compromesa sense permís i apareix quan cerques el teu nom."},
+   o:[{es:"Le pido que la retire; si no lo hace, ejerzo el derecho de supresión ante la red social y, si hace falta, reclamo a la AEPD",ca:"Li demano que la retiri; si no ho fa, exerceixo el dret de supressió davant la xarxa social i, si cal, reclamo a l'AEPD"},{es:"No puedo hacer nada: internet es público",ca:"No puc fer res: internet és públic"},{es:"Publico yo una foto suya para compensar",ca:"Publico jo una foto seva per compensar"}],a:0,
+   f:{es:"Tienes derecho a la propia imagen y al derecho de supresión / «derecho al olvido» (RGPD art. 17; LOPDGDD arts. 93-94).",ca:"Tens dret a la pròpia imatge i al dret de supressió / «dret a l'oblit» (RGPD art. 17; LOPDGDD arts. 93-94)."}},
+  {id:5,priv:false,tag:"Desconexión",q:{es:"Tu tutor/a de empresa en prácticas te escribe por WhatsApp a las 23:00 un día laborable.",ca:"El teu tutor/a d'empresa en pràctiques t'escriu per WhatsApp a les 23:00 un dia laborable."},
+   o:[{es:"Respondo enseguida para causar buena impresión",ca:"Responc de seguida per causar bona impressió"},{es:"Respondo al día siguiente en horario de trabajo y, si se repite, hablo de la política de desconexión",ca:"Responc l'endemà en horari de feina i, si es repeteix, parlo de la política de desconnexió"},{es:"Le bloqueo",ca:"El bloquejo"}],a:1,
+   f:{es:"El art. 88 de la LOPDGDD reconoce el derecho a la desconexión digital fuera del tiempo de trabajo.",ca:"L'art. 88 de la LOPDGDD reconeix el dret a la desconnexió digital fora del temps de feina."}},
+  {id:6,priv:false,tag:"Salud digital",q:{es:"Llevas semanas pasando 5 horas al día revisando ofertas y redes; duermes mal y te sientes agotado/a.",ca:"Fa setmanes que passes 5 hores al dia revisant ofertes i xarxes; dorms malament i et sents esgotat/da."},
+   o:[{es:"Aumento las horas: cuantas más, más oportunidades",ca:"Augmento les hores: com més, més oportunitats"},{es:"Planifico bloques de búsqueda con temporizador, activo alertas de empleo y fijo pausas y horas sin pantallas",ca:"Planifico blocs de cerca amb temporitzador, activo alertes d'ocupació i fixo pauses i hores sense pantalles"},{es:"Dejo de buscar trabajo",ca:"Deixo de cercar feina"}],a:1,
+   f:{es:"Prevenir la fatiga digital y el uso compulsivo forma parte de la salud digital: planificación, alertas y descanso.",ca:"Prevenir la fatiga digital i l'ús compulsiu forma part de la salut digital: planificació, alertes i descans."}},
+  {id:7,priv:true,tag:"Privacidad",q:{es:"Durante una entrevista te piden acceso a tu cuenta privada de Instagram.",ca:"Durant una entrevista et demanen accés al teu compte privat d'Instagram."},
+   o:[{es:"Acepto: si no, no me cogerán",ca:"Accepto: si no, no m'agafaran"},{es:"Me niego con educación: mi perfil privado no es necesario para valorar mi candidatura",ca:"M'hi nego amb educació: el meu perfil privat no és necessari per valorar la meva candidatura"},{es:"Les doy la contraseña para que miren cuando quieran",ca:"Els dono la contrasenya perquè hi mirin quan vulguin"}],a:1,
+   f:{es:"La empresa no puede exigir acceso a tus redes privadas: vulnera tu intimidad y el principio de minimización.",ca:"L'empresa no pot exigir accés a les teves xarxes privades: vulnera la teva intimitat i el principi de minimització."}},
+  {id:8,priv:true,tag:"Ciberseguridad",q:{es:"Recibes: «¡Seleccionado/a! Envía hoy tu DNI y tu cuenta bancaria para el alta». El remitente es desconocido.",ca:"Reps: «Seleccionat/da! Envia avui el teu DNI i el compte bancari per a l'alta». El remitent és desconegut."},
+   o:[{es:"Lo envío rápido para no perder el puesto",ca:"L'envio ràpid per no perdre el lloc"},{es:"Sospecho de phishing: verifico la empresa por canales oficiales y no envío datos",ca:"Sospito de pesca (phishing): verifico l'empresa per canals oficials i no envio dades"},{es:"Respondo pidiendo más información y adjunto el DNI por si acaso",ca:"Responc demanant més informació i adjunto el DNI per si de cas"}],a:1,
+   f:{es:"Urgencia + remitente desconocido + datos sensibles = señales típicas de fraude. Comprueba siempre la oferta.",ca:"Urgència + remitent desconegut + dades sensibles = senyals típics de frau. Comprova sempre l'oferta."}},
+];
+
+/* ============================================================
+   PUNTUACIÓN (100 por fase)
+   ============================================================ */
+function sc1(){
+  let s=0; SORT.forEach(i=>{ if(S.f1.sort[i.id]===i.a) s+=5; });
+  if(S.f1.engines.length>=3) s+=10;
+  if(String(S.f1.results).trim()) s+=10;
+  if(words(S.f1.found)>=20) s+=10;
+  if(words(S.f1.risks)>=15) s+=10;
+  if(words(S.f1.actions)>=15) s+=10;
+  return s;
+}
+function sortScore(){ return SORT.reduce((a,i)=>a+(S.f1.sort[i.id]===i.a?5:0),0); }
+function sc2(){
+  let s = S.f2.check.length*5;
+  if(/^https?:\/\/\S+/.test(S.f2.cvlink.trim())) s+=10;
+  if(DIG.every(d=>S.f2.dig[d.k]>0)) s+=20;
+  if(words(S.f2.improve)>=15) s+=10;
+  QUIZ2.forEach((q,i)=>{ if(S.f2.quiz[i]===q.a) s+=7.5; });
+  return s;
+}
+function offerObj(){ return OFFERS.find(o=>o.id===S.f3.offer); }
+function offerKw(){
+  const o=offerObj(); if(!o) return [];
+  if(o.id==="X") return S.f3.customKw.split(/[,;\n]/).map(x=>x.trim()).filter(Boolean).slice(0,8);
+  return o.kw;
+}
+function letterText(){ return [S.f3.p0,S.f3.p1,S.f3.p2,S.f3.p3,S.f3.p4].join("\n\n"); }
+function kwFound(){
+  const txt=norm(letterText());
+  return offerKw().map(k=>({k, on: k.split("|").some(p=>p.trim() && txt.includes(norm(p.trim())))}));
+}
+function companyName(){ const o=offerObj(); return o? (o.id==="X"? S.f3.company : o.co) : ""; }
+function sc3(){
+  const o=offerObj(); if(!o) return 0;
+  let s=10;
+  const w = words(S.f3.p1)+words(S.f3.p2)+words(S.f3.p3);
+  if(w>=200 && w<=450) s+=20; else if(w>=120) s+=10;
+  const kf = kwFound().filter(x=>x.on).length;
+  if(kf>=4) s+=20; else if(kf>=2) s+=10;
+  const cn = norm(companyName()).trim();
+  if(cn && norm(letterText()).includes(cn)) s+=10;
+  if(["p0","p1","p2","p3","p4"].every(k=>String(S.f3[k]).trim())) s+=10;
+  if(/^https?:\/\/\S+/.test(S.f3.link.trim())) s+=10;
+  if(S.f3.peerName.trim() && S.f3.peer.length>=4) s+=20;
+  return s;
+}
+function sc4(){
+  let s=0; DIL.forEach(d=>{ if(S.f4.ans[d.id]===d.a) s+=10; if(words(S.f4.just[d.id])>=10) s+=2.5; });
+  return s;
+}
+const scores = () => [sc1(),sc2(),sc3(),sc4()];
+function medals(){
+  const [a,b,c,d]=scores();
+  const privOk = DIL.filter(x=>x.priv).every(x=>S.f4.ans[x.id]===x.a);
+  return {det:a>=80, vis:b>=80&&c>=70, pri:privOk&&sortScore()>=40, ciu:d>=80, a360:[a,b,c,d].every(x=>x>=70)};
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function header(){
+  document.documentElement.lang = S.lang;
+  $("#brandTxt").textContent = L(T.brand);
+  document.querySelectorAll(".lang button").forEach(b=>b.classList.toggle("on",b.dataset.lang===S.lang));
+  const tot = scores().reduce((a,b)=>a+b,0);
+  $("#gpts").textContent = `${fmt(tot)} / 400 · ${fmt(tot/40)}`+(S.lang==="es"?" /10":" /10");
+  $("#gbar").style.width = (tot/4)+"%";
+  const m = medals();
+  $("#gmedals").innerHTML = MEDALS.map(x=>`<span class="medal ${m[x.id]?'on':''}" title="${esc(L(x.d))}">${x.ico} ${esc(L(x.n))}</span>`).join("");
+  // toast for new medals
+  MEDALS.forEach(x=>{ if(m[x.id] && !S.medalsSeen.includes(x.id)){ S.medalsSeen.push(x.id); toast(L(T.medalWon)+L(x.n)); } });
+  // steps
+  const sc = scores();
+  $("#steps").innerHTML = T.tabs.map((t,i)=>{
+    const sub = i===0? "🎯" : i===5? "📁" : `${fmt(sc[i-1])}/100`;
+    const dis = i>0 && !canStart();
+    return `<button class="${S.phase===i?'on':''}" data-go="${i}" ${dis?'disabled':''}><span class="s">${i>0&&i<5?L(T.phase)+' '+i:''}${i===0||i===5?'':' · '}${sub}</span>${esc(L(t))}</button>`;
+  }).join("");
+  save();
+}
+const fmt = n => (Math.round(n*10)/10).toString().replace(".", S.lang==="es"||S.lang==="ca" ? "," : ".");
+const canStart = () => S.name.trim().length>1 && S.group.trim().length>0;
+let tt; function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove("show"),2600); }
+
+function phaseScoreBox(i){
+  const s=scores()[i-1];
+  return `<div class="card pscore" id="ps${i}"><span>${L(T.phaseScore)}</span><div class="bar"><i style="width:${s}%"></i></div><span>${fmt(s)}/100</span></div>`;
+}
+function navBtns(){
+  const p=S.phase;
+  return `<div class="nav noprint">${p>0?`<button class="btn sec" data-go="${p-1}">${L(T.prev)}</button>`:'<span></span>'}
+  ${p<5?`<button class="btn" data-go="${p+1}" ${!canStart()?'disabled':''}>${p===4?(S.lang==='es'?'Ver mi dossier →':'Veure el meu dossier →'):p===0?(S.lang==='es'?'Empezar misión →':'Començar missió →'):L(T.next)}</button>`:''}</div>`;
+}
+const ce = arr => `<div>${arr.map(c=>`<span class="tag">CE5.${c}</span>`).join("")}</div>`;
+const ta = (path,ph,min) => {
+  const v = get(path);
+  return `<textarea data-k="${path}" placeholder="${esc(ph||'')}">${esc(v)}</textarea>${min?`<div class="hint" data-wc="${path}" data-min="${min}"></div>`:''}`;
+};
+const inp = (path,ph,type="text") => `<input type="${type}" data-k="${path}" value="${esc(get(path))}" placeholder="${esc(ph||'')}">`;
+function get(path){ return path.split(".").reduce((o,k)=>o?.[k],S) ?? ""; }
+function set(path,val){ const ks=path.split("."); let o=S; ks.slice(0,-1).forEach(k=>o=o[k]); o[ks.at(-1)]=val; }
+
+/* ---------- vistas ---------- */
+function v0(){
+  const es=S.lang==="es";
+  return `
+  <section class="card hero">
+    <span class="tag">${CONFIG.CODIGO}</span><span class="tag">RA5</span><span class="tag">${esc(CONFIG.MODULO)}</span>
+    <h1>${es?"Misión Marca Digital":"Missió Marca Digital"}</h1>
+    <p style="font-size:1.05rem">${es?"Agente, a partir de hoy eres un <b>agente de empleabilidad digital</b>. Tu misión: preparar una candidatura <b>segura, atractiva y ética</b>.":"Agent, a partir d'avui ets un <b>agent d'ocupabilitat digital</b>. La teva missió: preparar una candidatura <b>segura, atractiva i ètica</b>."}</p>
+    <p class="muted">${es?"Supera 4 fases, reúne evidencias, gana puntos y medallas. Al final descargarás tu <b>dossier de identidad y candidatura digital</b> y lo enviarás a tu docente.":"Supera 4 fases, reuneix evidències, guanya punts i medalles. Al final descarregaràs el teu <b>dossier d'identitat i candidatura digital</b> i l'enviaràs al teu docent."}</p>
+  </section>
+  <section class="card">
+    <h2>${es?"Identificación del agente":"Identificació de l'agent"}</h2>
+    <div class="grid2">
+      <div><label class="f">${es?"Nombre y apellidos":"Nom i cognoms"}</label>${inp("name")}</div>
+      <div><label class="f">${es?"Grupo":"Grup"}</label>${inp("group")}</div>
+    </div>
+    <label class="f">${es?"Compañero/a de pareja (para los desafíos por parejas)":"Company/a de parella (per als desafiaments per parelles)"}</label>${inp("partner")}
+    <div class="hint" id="needName">${canStart()?'':L(T.needName)}</div>
+  </section>
+  <section class="card">
+    <h2>${es?"Las 4 fases":"Les 4 fases"}</h2>
+    <div class="grid2">
+      ${[[1,"🔍",es?"Auditoría de identidad":"Auditoria d'identitat",es?"Búscate en modo incógnito y detecta riesgos y oportunidades.":"Cerca't en mode incògnit i detecta riscos i oportunitats."],
+        [2,"💼",es?"Perfil profesional":"Perfil professional",es?"CV Europass y autoevaluación DigComp.":"CV Europass i autoavaluació DigComp."],
+        [3,"✉️",es?"Candidatura":"Candidatura",es?"Carta de presentación adaptada a una oferta + revisión por parejas.":"Carta de presentació adaptada a una oferta + revisió per parelles."],
+        [4,"⚖️",es?"Dilemas digitales":"Dilemes digitals",es?"IA, RGPD/LOPDGDD, fatiga digital y desconexión.":"IA, RGPD/LOPDGDD, fatiga digital i desconnexió."]]
+        .map(([n,i,t,d])=>`<div class="q"><h3>${i} ${L(T.phase)} ${n} · ${t}</h3><div class="muted">${d}</div><div class="hint">100 ${es?"puntos":"punts"}</div></div>`).join("")}
+    </div>
+    <h3 style="margin-top:14px">${es?"Medallas":"Medalles"}</h3>
+    ${MEDALS.map(m=>`<div class="muted">${m.ico} <b>${esc(L(m.n))}</b> — ${esc(L(m.d))}</div>`).join("")}
+    <p class="hint">${es?"Tu progreso se guarda automáticamente en este navegador. Nota final = puntos / 40.":"El teu progrés es desa automàticament en aquest navegador. Nota final = punts / 40."}</p>
+  </section>
+  ${navBtns()}`;
+}
+
+function v1(){
+  const es=S.lang==="es";
+  return `
+  <section class="card">
+    <h2>🔍 ${L(T.phase)} 1 · ${es?"Auditoría de identidad":"Auditoria d'identitat"}</h2>${ce(["a","d","g"])}
+    <ol class="steps-list">
+      <li>${es?"Abre una ventana de <b>incógnito</b> (Ctrl + Mayús + N) para que el buscador no use tu historial.":"Obre una finestra d'<b>incògnit</b> (Ctrl + Maj + N) perquè el cercador no faci servir el teu historial."}</li>
+      <li>${es?"Busca tu <b>\"nombre apellido\"</b> entre comillas en al menos 3 fuentes (también imágenes y redes).":"Cerca el teu <b>\"nom cognom\"</b> entre cometes en almenys 3 fonts (també imatges i xarxes)."}</li>
+      <li>${es?"Comprueba tu correo en":"Comprova el teu correu a"} <a href="https://haveibeenpwned.com" target="_blank" rel="noopener">haveibeenpwned.com</a>.</li>
+      <li>${es?"Anota qué información pública hay sobre ti, sus riesgos y cómo mejorarla.":"Anota quina informació pública hi ha sobre tu, els seus riscos i com millorar-la."}</li>
+    </ol>
+  </section>
+  <section class="card">
+    <h3>${es?"Evidencias de la auditoría":"Evidències de l'auditoria"}</h3>
+    <label class="f">${es?"Fuentes consultadas (mínimo 3)":"Fonts consultades (mínim 3)"}</label>
+    <div class="grid2">${ENGINES.map((e,i)=>`<label class="chk"><input type="checkbox" data-arr="f1.engines" value="${i}" ${S.f1.engines.includes(i)?'checked':''}> ${esc(L(e))}</label>`).join("")}</div>
+    <label class="f">${es?"¿Cuántos resultados relacionados contigo aparecen en la primera página?":"Quants resultats relacionats amb tu apareixen a la primera pàgina?"}</label>${inp("f1.results",es?"p. ej. 3 resultados: Instagram, noticia del centro…":"p. ex. 3 resultats: Instagram, notícia del centre…")}
+    <label class="f">${es?"Información pública encontrada":"Informació pública trobada"}</label>${ta("f1.found",es?"Describe lo que has encontrado (perfiles, fotos, menciones…). Si no aparece nada, explica qué significa eso para tu visibilidad.":"Descriu el que has trobat (perfils, fotos, mencions…). Si no apareix res, explica què significa això per a la teva visibilitat.",20)}
+    <label class="f">${es?"Riesgos reputacionales detectados":"Riscos reputacionals detectats"}</label>${ta("f1.risks","",15)}
+    <label class="f">${es?"Acciones de mejora (qué vas a borrar, privatizar, crear o actualizar)":"Accions de millora (què esborraràs, privatitzaràs, crearàs o actualitzaràs)"}</label>${ta("f1.actions","",15)}
+  </section>
+  <section class="card">
+    <h3>${es?"Reto: ¿riesgo u oportunidad?":"Repte: risc o oportunitat?"}</h3>
+    <p class="muted">${es?"Clasifica cada hallazgo. Solo tienes un intento por elemento.":"Classifica cada troballa. Només tens un intent per element."}</p>
+    ${SORT.map(i=>{ const v=S.f1.sort[i.id]; const done=!!v;
+      return `<div class="sort-item ${done?(v===i.a?'ok':'bad'):''}"><div><div>${esc(L(i.t))}</div>${done?`<div class="hint ${v===i.a?'ok':''}">${v===i.a?'✔':'✘'} ${esc(L(i.f))}</div>`:''}</div>
+      <div class="opts"><button class="pill r ${v==='r'?'sel':''}" data-sort="${i.id}" data-v="r" ${done?'disabled':''}>⚠ ${es?"Riesgo":"Risc"}</button><button class="pill o ${v==='o'?'sel':''}" data-sort="${i.id}" data-v="o" ${done?'disabled':''}>✦ ${es?"Oportunidad":"Oportunitat"}</button></div></div>`;}).join("")}
+  </section>
+  ${phaseScoreBox(1)}${navBtns()}`;
+}
+
+function radar(){
+  const cx=140,cy=130,R=95,n=5;
+  const pt=(i,r)=>{const a=-Math.PI/2+i*2*Math.PI/n; return [cx+r*Math.cos(a), cy+r*Math.sin(a)];};
+  let g="";
+  [2,4,6,8].forEach(l=>{ g+=`<polygon points="${DIG.map((_,i)=>pt(i,R*l/8).join(",")).join(" ")}" fill="none" stroke="var(--line)"/>`; });
+  DIG.forEach((d,i)=>{ const [x,y]=pt(i,R); g+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="var(--line)"/>`;
+    const [lx,ly]=pt(i,R+16); g+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle">${i+1}</text>`; });
+  g+=`<polygon points="${DIG.map((d,i)=>pt(i,R*Math.max(S.f2.dig[d.k],0.15)/8).join(",")).join(" ")}" fill="rgba(45,212,191,.28)" stroke="var(--accent)" stroke-width="2"/>`;
+  return `<svg viewBox="0 0 280 260" width="100%" role="img" aria-label="DigComp">${g}</svg>`;
+}
+function v2(){
+  const es=S.lang==="es";
+  return `
+  <section class="card">
+    <h2>💼 ${L(T.phase)} 2 · ${es?"Perfil profesional":"Perfil professional"}</h2>${ce(["b","c","h"])}
+    <p>${es?"Crea o actualiza tu CV en":"Crea o actualitza el teu CV a"} <a href="https://europass.europa.eu/" target="_blank" rel="noopener">Europass</a> ${es?"y autoevalúa tu competencia digital con el marco DigComp. Puedes usar el":"i autoavalua la teva competència digital amb el marc DigComp. Pots fer servir el"} <a href="https://europa.eu/europass/digitalskills/" target="_blank" rel="noopener">${es?"test de competencias digitales de Europass":"test de competències digitals d'Europass"}</a>.</p>
+  </section>
+  <section class="card">
+    <h3>${es?"Checklist del CV Europass":"Checklist del CV Europass"}</h3>
+    ${EUROPASS.map((c,i)=>`<label class="chk"><input type="checkbox" data-arr="f2.check" value="${i}" ${S.f2.check.includes(i)?'checked':''}> ${esc(L(c))}</label>`).join("")}
+    <label class="f">${es?"Enlace a tu CV (Drive / OneDrive, con permiso de lectura para el docente)":"Enllaç al teu CV (Drive / OneDrive, amb permís de lectura per al docent)"}</label>${inp("f2.cvlink","https://…","url")}
+  </section>
+  <section class="card">
+    <h3>${es?"Autoevaluación DigComp":"Autoavaluació DigComp"}</h3>
+    <div class="dig"><div>
+      ${DIG.map((d,i)=>`<div class="dig-row"><div class="row" style="justify-content:space-between"><span>${i+1}. ${esc(L(d.n))}</span><span class="lvl" data-lvl="${d.k}">${S.f2.dig[d.k]||'–'} · ${esc(L(lvlName(S.f2.dig[d.k])))}</span></div>
+      <input type="range" min="0" max="8" step="1" value="${S.f2.dig[d.k]}" data-dig="${d.k}" aria-label="${esc(L(d.n))}"></div>`).join("")}
+      <div class="hint">${es?"1–2 Básico · 3–4 Intermedio · 5–6 Avanzado · 7–8 Altamente especializado":"1–2 Bàsic · 3–4 Intermedi · 5–6 Avançat · 7–8 Altament especialitzat"}</div>
+    </div><div id="radar">${radar()}</div></div>
+    <label class="f">${es?"¿Qué competencia digital necesitas mejorar para tu sector y cómo lo harás?":"Quina competència digital necessites millorar per al teu sector i com ho faràs?"}</label>${ta("f2.improve","",15)}
+  </section>
+  <section class="card"><h3>${es?"Mini-quiz Europass y DigComp":"Mini-qüestionari Europass i DigComp"}</h3>
+    ${QUIZ2.map((q,i)=>quizBlock("q2",i,q,S.f2.quiz[i])).join("")}
+  </section>
+  ${phaseScoreBox(2)}${navBtns()}`;
+}
+function quizBlock(kind,i,q,ans){
+  const done = ans!==undefined;
+  return `<div class="q"><b>${i+1}. ${esc(L(q.q))}</b>
+  ${q.o.map((o,j)=>`<button class="opt ${done&&j===q.a?'ok':''} ${done&&j===ans&&j!==q.a?'bad':''}" data-${kind}="${i}" data-v="${j}" ${done?'disabled':''}>${esc(L(o))}</button>`).join("")}
+  ${done?`<div class="fb ${ans===q.a?'':'bad'}">${ans===q.a?'✔ ':'✘ '}${esc(L(q.f))}</div>`:''}</div>`;
+}
+
+function v3(){
+  const es=S.lang==="es"; const o=offerObj();
+  return `
+  <section class="card">
+    <h2>✉️ ${L(T.phase)} 3 · ${es?"Candidatura":"Candidatura"}</h2>${ce(["c","g","h"])}
+    <p>${es?"Elige una oferta y redacta aquí tu carta por partes. Después dale formato en":"Tria una oferta i redacta aquí la teva carta per parts. Després dona-li format a"} <a href="https://www.canva.com" target="_blank" rel="noopener">Canva</a> ${es?"o":"o"} <a href="https://docs.google.com" target="_blank" rel="noopener">Google Docs</a>.</p>
+    <div class="offers">${OFFERS.map(x=>`<button class="offer ${S.f3.offer===x.id?'on':''}" data-offer="${x.id}"><b>${esc(L(x.t))}</b>${x.co?`<span class="muted">${esc(x.co)}</span><br>`:''}<span class="hint">${esc(L(x.d))}</span></button>`).join("")}</div>
+    ${o&&o.id==="X"?`<div class="grid2"><div><label class="f">${es?"Puesto":"Lloc"}</label>${inp("f3.customTitle")}</div><div><label class="f">${es?"Empresa":"Empresa"}</label>${inp("f3.company")}</div></div>
+      <label class="f">${es?"Palabras clave de la oferta (separadas por comas)":"Paraules clau de l'oferta (separades per comes)"}</label>${inp("f3.customKw")}`:''}
+  </section>
+  ${o?`<section class="card">
+    <h3>${es?"Tu carta de presentación":"La teva carta de presentació"}</h3>
+    <div id="kwbox">${kwHtml()}</div>
+    <label class="f">${es?"Saludo y destinatario":"Salutació i destinatari"}</label>${inp("f3.p0",es?"Estimada Sra. … / Equipo de selección de …":"Benvolguda Sra. … / Equip de selecció de …")}
+    <label class="f">${es?"Párrafo 1 · Quién eres y por qué escribes a esta empresa":"Paràgraf 1 · Qui ets i per què escrius a aquesta empresa"}</label>${ta("f3.p1")}
+    <label class="f">${es?"Párrafo 2 · Cómo encajan tus competencias con la oferta (con ejemplos)":"Paràgraf 2 · Com encaixen les teves competències amb l'oferta (amb exemples)"}</label>${ta("f3.p2")}
+    <label class="f">${es?"Párrafo 3 · Qué aportas y propuesta de entrevista":"Paràgraf 3 · Què aportes i proposta d'entrevista"}</label>${ta("f3.p3")}
+    <label class="f">${es?"Despedida, nombre y contacto":"Comiat, nom i contacte"}</label>${inp("f3.p4")}
+    <ul class="checks" id="letterChecks">${letterChecks()}</ul>
+    <label class="f">${es?"Enlace a la versión final maquetada (Canva / Google Docs)":"Enllaç a la versió final maquetada (Canva / Google Docs)"}</label>${inp("f3.link","https://…","url")}
+  </section>
+  <section class="card">
+    <h3>👥 ${es?"Desafío por parejas: revisión cruzada":"Desafiament per parelles: revisió creuada"}</h3>
+    <p class="muted">${es?"Pide a tu pareja que lea tu carta y marque lo que cumple. (Vale 20 puntos si marca 4 o más.)":"Demana a la teva parella que llegeixi la carta i marqui el que compleix. (Val 20 punts si en marca 4 o més.)"}</p>
+    <label class="f">${es?"Nombre de quien revisa":"Nom de qui revisa"}</label>${inp("f3.peerName",S.partner)}
+    ${PEER.map((c,i)=>`<label class="chk"><input type="checkbox" data-arr="f3.peer" value="${i}" ${S.f3.peer.includes(i)?'checked':''}> ${esc(L(c))}</label>`).join("")}
+  </section>`:''}
+  ${phaseScoreBox(3)}${navBtns()}`;
+}
+function kwHtml(){
+  const es=S.lang==="es"; const k=kwFound();
+  if(!k.length) return `<div class="hint">${es?"Añade palabras clave para ver cuáles usas.":"Afegeix paraules clau per veure quines fas servir."}</div>`;
+  return `<div class="hint">${es?"Palabras clave de la oferta que ya usas (objetivo: 4+):":"Paraules clau de l'oferta que ja fas servir (objectiu: 4+):"}</div>${k.map(x=>`<span class="kw ${x.on?'on':''}">${x.on?'✔ ':''}${esc(x.k.split("|")[0])}…</span>`).join("")}`;
+}
+function letterChecks(){
+  const es=S.lang==="es";
+  const w = words(S.f3.p1)+words(S.f3.p2)+words(S.f3.p3);
+  const cn = norm(companyName()).trim();
+  const items = [
+    [w>=200&&w<=450, `${es?"Extensión de los 3 párrafos":"Extensió dels 3 paràgrafs"}: ${w} ${L(T.words)} (200–450)`],
+    [kwFound().filter(x=>x.on).length>=4, es?"Usa 4 o más palabras clave de la oferta":"Fa servir 4 o més paraules clau de l'oferta"],
+    [cn && norm(letterText()).includes(cn), `${es?"Menciona la empresa":"Esmenta l'empresa"}${companyName()?` (${esc(companyName())})`:''}`],
+    [["p0","p1","p2","p3","p4"].every(k=>String(S.f3[k]).trim()), es?"Todas las partes completas":"Totes les parts completes"],
+  ];
+  return items.map(([ok,t])=>`<li class="hint ${ok?'ok':''}">${ok?'✔':'○'} ${t}</li>`).join("");
+}
+
+function v4(){
+  const es=S.lang==="es";
+  return `
+  <section class="card">
+    <h2>⚖️ ${L(T.phase)} 4 · ${es?"Dilemas digitales":"Dilemes digitals"}</h2>${ce(["a","e","f"])}
+    <p class="muted">${es?"Elige la mejor decisión (un intento) y justifícala con tus palabras (mínimo 10 palabras). Correcta = 10 puntos · Justificación = 2,5 puntos.":"Tria la millor decisió (un intent) i justifica-la amb les teves paraules (mínim 10 paraules). Correcta = 10 punts · Justificació = 2,5 punts."}</p>
+    <p class="hint">${es?"Consulta":"Consulta"}: <a href="https://www.aepd.es" target="_blank" rel="noopener">AEPD</a> · RGPD · LOPDGDD (Ley Orgánica 3/2018)</p>
+  </section>
+  ${DIL.map((d,i)=>{ const ans=S.f4.ans[d.id]; const done=ans!==undefined;
+    return `<section class="card q" style="background:var(--card)"><span class="tag">${esc(d.tag)}</span><b style="display:block">${i+1}. ${esc(L(d.q))}</b>
+    ${d.o.map((o,j)=>`<button class="opt ${done&&j===d.a?'ok':''} ${done&&j===ans&&j!==d.a?'bad':''}" data-dil="${d.id}" data-v="${j}" ${done?'disabled':''}>${esc(L(o))}</button>`).join("")}
+    ${done?`<div class="fb ${ans===d.a?'':'bad'}">${ans===d.a?'✔ ':'✘ '}${esc(L(d.f))}</div>`:''}
+    <label class="f">${es?"Justifica tu decisión":"Justifica la teva decisió"}</label>${ta("f4.just."+d.id,"",10)}
+    </section>`;}).join("")}
+  ${phaseScoreBox(4)}${navBtns()}`;
+}
+
+function dossierText(){
+  const es=S.lang==="es"; const sc=scores(); const tot=sc.reduce((a,b)=>a+b,0); const m=medals();
+  const o=offerObj();
+  const lines=[
+    `${es?"MISIÓN MARCA DIGITAL":"MISSIÓ MARCA DIGITAL"} (${CONFIG.CODIGO} · RA5)`,
+    `${es?"Alumno/a":"Alumne/a"}: ${S.name} · ${es?"Grupo":"Grup"}: ${S.group}${S.partner?` · ${es?"Pareja":"Parella"}: ${S.partner}`:''}`,
+    `${es?"Puntos":"Punts"}: F1 ${fmt(sc[0])} · F2 ${fmt(sc[1])} · F3 ${fmt(sc[2])} · F4 ${fmt(sc[3])} = ${fmt(tot)}/400 → ${fmt(tot/40)}/10`,
+    `${es?"Medallas":"Medalles"}: ${MEDALS.filter(x=>m[x.id]).map(x=>L(x.n)).join(", ")||"—"}`,
+    ``,`[F1] ${es?"Fuentes":"Fonts"}: ${S.f1.engines.map(i=>L(ENGINES[i])).join(", ")}`,
+    `${es?"Resultados":"Resultats"}: ${S.f1.results}`,`${es?"Encontrado":"Trobat"}: ${S.f1.found}`,`${es?"Riesgos":"Riscos"}: ${S.f1.risks}`,`${es?"Mejoras":"Millores"}: ${S.f1.actions}`,
+    ``,`[F2] CV: ${S.f2.cvlink}`,`DigComp: ${DIG.map((d,i)=>`${i+1}=${S.f2.dig[d.k]}`).join(" · ")}`,`${es?"Mejora":"Millora"}: ${S.f2.improve}`,
+    ``,`[F3] ${es?"Oferta":"Oferta"}: ${o?(o.id==="X"?S.f3.customTitle+" – "+S.f3.company:L(o.t)+" – "+o.co):"—"}`,`${es?"Carta final":"Carta final"}: ${S.f3.link}`,`${es?"Revisión por":"Revisió per"}: ${S.f3.peerName} (${S.f3.peer.length}/5)`,
+    ``,`[F4] ${DIL.map((d,i)=>`${i+1}:${S.f4.ans[d.id]===undefined?'—':(S.f4.ans[d.id]===d.a?'✔':'✘')}`).join(" ")}`
+  ];
+  return lines.join("\n");
+}
+function v5(){
+  const es=S.lang==="es"; const sc=scores(); const tot=sc.reduce((a,b)=>a+b,0); const m=medals(); const o=offerObj();
+  const block=(t,c)=>`<h3>${t}</h3><pre>${esc(c)||'—'}</pre>`;
+  return `
+  <section class="card hero dossier" id="dossier">
+    <span class="tag">${CONFIG.CODIGO}</span><span class="tag">RA5 · CE5.a–h</span>
+    <h1>📁 ${es?"Dossier de identidad y candidatura digital":"Dossier d'identitat i candidatura digital"}</h1>
+    <p><b>${esc(S.name)}</b> · ${esc(S.group)}${S.partner?` · ${es?"Pareja":"Parella"}: ${esc(S.partner)}`:''} · ${new Date().toLocaleDateString(S.lang==="es"?"es-ES":"ca-ES")}</p>
+    <div class="row" style="gap:24px"><div><div class="big">${fmt(tot/40)}<span style="font-size:1rem">/10</span></div><div class="muted">${fmt(tot)} / 400 ${es?"puntos":"punts"}</div></div>
+    <div class="muted">F1 ${fmt(sc[0])} · F2 ${fmt(sc[1])} · F3 ${fmt(sc[2])} · F4 ${fmt(sc[3])}</div></div>
+    <div style="margin-top:10px">${MEDALS.map(x=>`<span class="medal-big ${m[x.id]?'on':''}">${x.ico} ${esc(L(x.n))}</span>`).join("")}</div>
+
+    <h2 style="margin-top:22px">🔍 ${es?"1. Auditoría de marca personal":"1. Auditoria de marca personal"}</h2>
+    ${block(es?"Fuentes consultadas":"Fonts consultades", S.f1.engines.map(i=>L(ENGINES[i])).join(", "))}
+    ${block(es?"Resultados en primera página":"Resultats a la primera pàgina", S.f1.results)}
+    ${block(es?"Información pública encontrada":"Informació pública trobada", S.f1.found)}
+    ${block(es?"Riesgos":"Riscos", S.f1.risks)}
+    ${block(es?"Acciones de mejora":"Accions de millora", S.f1.actions)}
+    <p class="muted">${es?"Clasificación riesgo/oportunidad":"Classificació risc/oportunitat"}: ${SORT.filter(i=>S.f1.sort[i.id]===i.a).length}/${SORT.length}</p>
+
+    <h2>💼 ${es?"2. Perfil profesional":"2. Perfil professional"}</h2>
+    ${block("CV Europass", S.f2.cvlink)}
+    <div class="dig"><div>${DIG.map((d,i)=>`<div>${i+1}. ${esc(L(d.n))}: <b>${S.f2.dig[d.k]||'–'}</b> (${esc(L(lvlName(S.f2.dig[d.k])))})</div>`).join("")}</div><div style="max-width:260px">${radar()}</div></div>
+    ${block(es?"Plan de mejora digital":"Pla de millora digital", S.f2.improve)}
+
+    <h2>✉️ ${es?"3. Carta de presentación":"3. Carta de presentació"}</h2>
+    <p class="muted">${o?esc(o.id==="X"?S.f3.customTitle+" – "+S.f3.company:L(o.t)+" – "+o.co):"—"}</p>
+    <pre>${esc(letterText().trim())||'—'}</pre>
+    ${block(es?"Versión maquetada":"Versió maquetada", S.f3.link)}
+    <p class="muted">${es?"Revisión por parejas":"Revisió per parelles"}: ${esc(S.f3.peerName)||'—'} · ${S.f3.peer.length}/5 ${es?"criterios":"criteris"}</p>
+
+    <h2>⚖️ ${es?"4. Decisiones sobre datos, IA y salud digital":"4. Decisions sobre dades, IA i salut digital"}</h2>
+    ${DIL.map((d,i)=>{const a=S.f4.ans[d.id];return `<div style="margin:8px 0"><b>${i+1}. ${esc(L(d.q))}</b><br>${a===undefined?'—':(a===d.a?'✔ ':'✘ ')+esc(L(d.o[a]))}<pre>${esc(S.f4.just[d.id])||'—'}</pre></div>`;}).join("")}
+  </section>
+  <section class="card noprint">
+    <h3>${es?"Entrega":"Lliurament"}</h3>
+    <ol class="steps-list">
+      <li>${es?"Descarga tu dossier en PDF (en el diálogo de impresión elige «Guardar como PDF») o como archivo HTML.":"Descarrega el teu dossier en PDF (al diàleg d'impressió tria «Desa com a PDF») o com a fitxer HTML."}</li>
+      <li>${es?"Envía el resumen por correo a tu docente y adjunta el PDF.":"Envia el resum per correu al teu docent i adjunta el PDF."}</li>
+    </ol>
+    <div class="row">
+      <button class="btn" id="bPrint">🖨️ ${es?"Guardar PDF":"Desa PDF"}</button>
+      <button class="btn sec" id="bHtml">⬇️ ${es?"Descargar dossier (HTML)":"Descarrega dossier (HTML)"}</button>
+      <a class="btn sec" id="bMail" href="#" style="text-decoration:none">✉️ ${es?"Enviar por email":"Envia per correu"}</a>
+      <button class="btn sec" id="bCopy">📋 ${es?"Copiar resumen":"Copia resum"}</button>
+    </div>
+    <p class="hint">${es?"Si «Guardar PDF» no funciona dentro de la web del centro, usa «Descargar dossier (HTML)», ábrelo y guárdalo como PDF.":"Si «Desa PDF» no funciona dins la web del centre, fes servir «Descarrega dossier (HTML)», obre'l i desa'l com a PDF."}</p>
+    <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
+    <button class="btn sec small" id="bReset">↺ ${es?"Reiniciar misión (borra todo)":"Reinicia la missió (ho esborra tot)"}</button>
+  </section>
+  ${navBtns()}`;
+}
+
+const VIEWS=[v0,v1,v2,v3,v4,v5];
+function render(){
+  if(S.phase>0 && !canStart()) S.phase=0;
+  header();
+  $("#view").innerHTML = VIEWS[S.phase]();
+  updateLive();
+}
+function updateLive(){
+  document.querySelectorAll("[data-wc]").forEach(h=>{
+    const n=words(get(h.dataset.wc)), min=+h.dataset.min;
+    h.textContent = `${n} ${L(T.words)} (${S.lang==="es"?"mín.":"mín."} ${min})`; h.classList.toggle("ok",n>=min);
+  });
+  const k=$("#kwbox"); if(k) k.innerHTML=kwHtml();
+  const lc=$("#letterChecks"); if(lc) lc.innerHTML=letterChecks();
+  for(let i=1;i<=4;i++){ const b=$("#ps"+i); if(b){ const s=scores()[i-1]; b.querySelector("i").style.width=s+"%"; b.lastElementChild.textContent=fmt(s)+"/100"; } }
+  const nn=$("#needName"); if(nn) nn.textContent = canStart()?"":L(T.needName);
+  document.querySelectorAll(".nav .btn[data-go]").forEach(b=>{ if(+b.dataset.go>S.phase) b.disabled=!canStart(); });
+  header();
+}
+
+/* ---------- eventos ---------- */
+document.addEventListener("input", e=>{
+  const t=e.target;
+  if(t.dataset.k){ set(t.dataset.k, t.value); updateLive(); }
+  if(t.dataset.dig){ S.f2.dig[t.dataset.dig]=+t.value; const l=document.querySelector(`[data-lvl="${t.dataset.dig}"]`); if(l) l.textContent=`${t.value||'–'} · ${L(lvlName(+t.value))}`; $("#radar").innerHTML=radar(); updateLive(); }
+});
+document.addEventListener("change", e=>{
+  const t=e.target;
+  if(t.dataset.arr){ const arr=get(t.dataset.arr); const v=+t.value; const i=arr.indexOf(v); if(t.checked&&i<0) arr.push(v); if(!t.checked&&i>=0) arr.splice(i,1); updateLive(); }
+});
+document.addEventListener("click", e=>{
+  const b=e.target.closest("button, a"); if(!b) return;
+  const d=b.dataset;
+  if(d.lang){ S.lang=d.lang; render(); return; }
+  if(d.go!==undefined){ S.phase=+d.go; render(); window.scrollTo({top:0,behavior:"smooth"}); return; }
+  if(d.sort){ if(!S.f1.sort[d.sort]){ S.f1.sort[d.sort]=d.v; render(); } return; }
+  if(d.q2!==undefined){ if(S.f2.quiz[d.q2]===undefined){ S.f2.quiz[d.q2]=+d.v; render(); } return; }
+  if(d.dil){ if(S.f4.ans[d.dil]===undefined){ S.f4.ans[d.dil]=+d.v; render(); } return; }
+  if(d.offer){ S.f3.offer=d.offer; render(); return; }
+  if(b.id==="bPrint"){ try{ window.print(); }catch(err){ toast("⚠"); } return; }
+  if(b.id==="bHtml"){ downloadHtml(); return; }
+  if(b.id==="bCopy"){ navigator.clipboard?.writeText(dossierText()).then(()=>toast("✔ "+(S.lang==="es"?"Copiado":"Copiat"))).catch(()=>toast("⚠")); return; }
+  if(b.id==="bMail"){ e.preventDefault();
+    const subj=`${CONFIG.CODIGO} Misión Marca Digital – ${S.name} (${S.group})`;
+    let body=dossierText(); if(body.length>1800) body=body.slice(0,1800)+"…";
+    body += "\n\n"+(S.lang==="es"?"(Adjunto el dossier en PDF)":"(Adjunto el dossier en PDF)");
+    const url=`mailto:${encodeURIComponent(CONFIG.EMAIL_DOCENTE)}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+    try{ window.top.location.href=url; }catch(err){ window.open(url,"_blank"); }
+    return; }
+  if(b.id==="bReset"){ if(confirm(S.lang==="es"?"¿Seguro? Se borrarán todas tus respuestas.":"Segur? S'esborraran totes les respostes.")){ const lang=S.lang; S=fresh(); S.lang=lang; save(); render(); } return; }
+});
+function downloadHtml(){
+  const css=document.querySelector("style").outerHTML;
+  const html=`<!DOCTYPE html><html lang="${S.lang}"><head><meta charset="UTF-8"><title>Dossier ${esc(S.name)}</title>${css}<style>body{background:#fff;color:#111}.card{background:#fff;border-color:#ccc}.dossier pre{background:#f3f3f3}.muted,.hint{color:#444}.big{color:#0f766e}svg text{fill:#333}</style></head><body><main class="wrap">${$("#dossier").outerHTML}</main><script>window.onload=()=>setTimeout(()=>window.print(),400)<\/script></body></html>`;
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([html],{type:"text/html"}));
+  a.download=`Dossier_MarcaDigital_${S.name.replace(/\s+/g,"_")||"alumno"}.html`; document.body.appendChild(a); a.click(); a.remove();
+}
+render();
+</script>
+</body>
+</html>
